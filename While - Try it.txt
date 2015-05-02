@@ -1,0 +1,19 @@
+### Use a while loop to solve the following problem: A slow, but determined, walker sets 
+### off from Leicester to cover the 102 miles to London at 2 miles per hour. Another walker 
+### sets off from London heading to Leicester going at 1 mile per hour. Where do they meet?
+
+London = 0
+Leicester = 102
+walking = True
+
+while walking:
+    if London < Leicester:
+        print("Still walking from London! On mile {}".format(London))
+        print("Still walking from Leicester! On mile {}".format(Leicester))
+        London += 2
+        Leicester -=1
+    else:
+        walking = False
+else:
+    print("Meet at mile {}".format(Leicester))
+    
