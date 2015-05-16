@@ -14,4 +14,4 @@ loansData.dropna(inplace=True)
 chi, p = stats.chisquare(freq.values())
 
 #prints
-print chi
+print chi, p
