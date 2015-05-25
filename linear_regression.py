@@ -1,7 +1,7 @@
 import pandas as pd
 
 loansData = pd.read_csv('https://spark-public.s3.amazonaws.com/dataanalysis/loansData.csv')
- 
+
 #Remove '%' from Interest.Rate
 loansData['Interest.Rate'] = loansData['Interest.Rate'] .map(lambda x: round(float(x.rstrip('%')) / 100, 4))
 
@@ -47,3 +47,5 @@ model = sm.OLS(y,X)
 f = model.fit()
 
 f.summary()
+
+loansData.to_csv('loansData_clean.csv', header=True, index=False)
