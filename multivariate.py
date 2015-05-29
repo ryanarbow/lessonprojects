@@ -1,6 +1,6 @@
 import pandas as pd
 
-loansData = pd.read_csv('Loadstats3d.csv', skiprows=1)
+loansData = pd.read_csv('LoanStats3d.csv', skiprows=1)
 
 #Remove '%' from int_rate
 loansData['int_rate'] = loansData['int_rate'].map(lambda x: round(float(x.rstrip('%')) / 100, 4))
