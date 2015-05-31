@@ -10,7 +10,7 @@ loanStats = pd.read_csv('LoanStats3d.csv')
 #Remove '%' from int_rate
 loanStats['int_rate'] = loanStats['int_rate'].map(lambda x: round(float(x.rstrip('%')) / 100, 4))
 
-#Change house_ownership data to 
+#Change house_ownership
 loanStats['home_ownership_ord'] = pd.Categorical(loanStats.home_ownership).labels
 
 #Extract columns
