@@ -1,1 +1,1 @@
-print "Hello, World, my name is Ryan", where Ryan is your name.
+print "I'm now becoming a Git Ninja!"
