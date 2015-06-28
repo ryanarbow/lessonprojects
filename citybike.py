@@ -17,7 +17,8 @@ r = requests.get('http://www.citibikenyc.com/stations/json')
 
 # In[5]:
 
-#Test that you have all the fields (important for setting up a database) by running the data through a loop and gathering all the fields together:
+#Test that you have all the fields (important for setting up a database) by 
+#running the data through a loop and gathering all the fields together:
 key_list = [] #unique list of keys for each station listing
 for station in r.json()['stationBeanList']:
     for k in station.keys():
@@ -35,8 +36,9 @@ df = json_normalize(r.json()['stationBeanList'])
 # In[15]:
 
 #Create static reference table
-#Our first step is to create a reference table that stores the information that remains static with the station ID (id) number as the key value.
-#Here we connect to the database. The `connect()` method returns a connection object.
+#Our first step is to create a reference table that stores the information that remains 
+#static with the station ID (id) number as the key value. Here we connect to the database.
+#The `connect()` method returns a connection object.
 con = lite.connect('citi_bike.db')
  
 #From the connection, you get a cursor object. The cursor is what goes over the records that result from a query.
@@ -58,8 +60,13 @@ sql = "INSERT INTO citibike_reference (id, totalDocks, city, altitude, stAddress
 #for loop to populate values in the database
 with con:
     for station in r.json()['stationBeanList']:
-        #id, totalDocks, city, altitude, stAddress2, longitude, postalCode, testStation, stAddress1, stationName, landMark, latitude, location)
-        cur.execute(sql,(station['id'],station['totalDocks'],station['city'],station['altitude'],station['stAddress2'],station['longitude'],station['postalCode'],station['testStation'],station['stAddress1'],station['stationName'],station['landMark'],station['latitude'],station['location']))
+        #id, totalDocks, city, altitude, stAddress2, longitude, postalCode, testStation, 
+        #stAddress1, stationName, landMark, latitude, location)
+        cur.execute(sql,(station['id'], station['totalDocks'], station['city'],
+                    station['altitude'], station['stAddress2'], station['longitude'],
+                    station['postalCode'], station['testStation'], station['stAddress1'],
+                    station['stationName'], station['landMark'], station['latitude'],
+                    station['location']))
 
 
 # In[18]:
@@ -72,9 +79,11 @@ station_ids = df['id'].tolist()
 station_ids = ['_' + str(x) + ' INT' for x in station_ids]
 
 #create the table
-#in this case, we're concatentating the string and joining all the station ids (now with '_' and 'INT' added)
+#in this case, we're concatentating the string and joining all the station ids 
+#(now with '_' and 'INT' added)
 with con:
-    cur.execute("CREATE TABLE available_bikes ( execution_time INT, " +  ", ".join(station_ids) + ");")
+	cur.execute("CREATE TABLE available_bikes ( execution_time INT, " +  ", 
+	            ".join(station_ids) + ");")
 
 
 # In[19]:
@@ -96,7 +105,8 @@ exec_time = parse(r.json()['executionTime'])
 
 #We create an entry for the execution time by inserting it into the database:
 with con:
-    cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', (exec_time.strftime('%s'),))
+    cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', 
+               (exec_time.strftime('%s'),))
 
 
 # In[21]:
@@ -111,7 +121,8 @@ for station in r.json()['stationBeanList']:
 #iterate through the defaultdict to update the values in the database
 with con:
     for k, v in id_bikes.iteritems():
-        cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime('%s') + ";")
+        cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + 
+        " WHERE execution_time = " + exec_time.strftime('%s') + ";")
  
 import time
 from dateutil.parser import parse
@@ -127,7 +138,8 @@ for i in range(60):
     r = requests.get('http://www.citibikenyc.com/stations/json')
     exec_time = parse(r.json()['executionTime'])
 
-    cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', (exec_time.strftime('%s'),))
+    cur.execute('INSERT INTO available_bikes (execution_time) VALUES (?)', 
+               (exec_time.strftime('%s'),))
     con.commit()
 
     id_bikes = collections.defaultdict(int)
@@ -135,7 +147,8 @@ for i in range(60):
         id_bikes[station['id']] = station['availableBikes']
 
     for k, v in id_bikes.iteritems():
-        cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime('%s') + ";")
+        cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + 
+                    " WHERE execution_time = " + exec_time.strftime('%s') + ";")
     con.commit()
 
     time.sleep(60)
@@ -166,10 +179,13 @@ def keywithmaxval(d):
 max_station = keywithmaxval(hour_change)
 
 #query sqlite for reference information
-cur.execute("SELECT id, stationname, latitude, longitude FROM citibike_reference WHERE id = ?", (max_station,))
+cur.execute("SELECT id, stationname, latitude, longitude FROM citibike_reference 
+            'WHERE id = ?", (max_station,))
 data = cur.fetchone()
 print "The most active station is station id %s at %s latitude: %s longitude: %s " % data
-print "With " + str(hour_change[379]) + " bicycles coming and going in the hour between " + datetime.datetime.fromtimestamp(int(df.index[0])).strftime('%Y-%m-%dT%H:%M:%S') + " and " + datetime.datetime.fromtimestamp(int(df.index[-1])).strftime('%Y-%m-%dT%H:%M:%S')
+print "With " + str(hour_change[379]) + " bicycles coming and going in the hour between " 
+      + datetime.datetime.fromtimestamp(int(df.index[0])).strftime('%Y-%m-%dT%H:%M:%S') + 
+      " and " + datetime.datetime.fromtimestamp(int(df.index[-1])).strftime('%Y-%m-%dT%H:%M:%S')
 
 import matplotlib.pyplot as plt
 

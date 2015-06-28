@@ -32,3 +32,4 @@ for rows in table1:
     records.append(record)
 column_name = ['country', 'year', 'total', 'men', 'women']   
 df = pd.DataFrame(records, columns = column_name)
+
