@@ -62,8 +62,11 @@ with con:
     for station in r.json()['stationBeanList']:
         #id, totalDocks, city, altitude, stAddress2, longitude, postalCode, testStation, 
         #stAddress1, stationName, landMark, latitude, location)
-        cur.execute(sql,(station['id'], station['totalDocks'], station['city'],
-                    station['altitude'], station['stAddress2'], station['longitude'],
+        cur.execute(sql,(station['id'], 
+        			station['totalDocks'], 
+        			station['city'],
+                    station['altitude'], 
+                    station['stAddress2'], station['longitude'],
                     station['postalCode'], station['testStation'], station['stAddress1'],
                     station['stationName'], station['landMark'], station['latitude'],
                     station['location']))
